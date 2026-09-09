@@ -16,20 +16,24 @@ Verified locally on September 8, 2026.
 
 ## Test boundaries
 
-Browser verification intercepted Supabase requests and supplied a temporary test fixture derived from the live Met record. A second dated copy existed only in that browser test to exercise navigation. **No sample records or fixtures ship in the application, and no daily object has been inserted into a hosted database.**
+Initial browser verification intercepted Supabase requests and supplied a temporary test fixture derived from the live Met record. A second dated copy existed only in that browser test to exercise navigation. No sample records or fixtures ship in the application. Subsequent live verification is recorded below.
 
-Concurrency/idempotence tests use an in-memory store. The SQL schema includes RLS, explicit read-only public grants, and unique constraints, but their enforcement has not yet been verified against a hosted Supabase instance.
+Concurrent-race tests use an in-memory store. Same-day idempotence was also verified with two successful GitHub Actions runs against the hosted database. Multi-entry navigation was tested with fixtures; production currently has one genuine daily entry.
 
 ## Provisioning update
 
-Created Supabase project `ohnqqkffbfdwuetdqgfj` (`one-from-the-met`) in Kenneth Testing Lab on the $0/month plan. Applied the schema as migration `create_daily_objects`. A live catalog query verified RLS enabled, anonymous SELECT allowed, and anonymous INSERT/UPDATE/DELETE privileges denied. The table is currently empty.
+Created Supabase project `ohnqqkffbfdwuetdqgfj` (`one-from-the-met`) in Kenneth Testing Lab on the $0/month plan. Applied the schema as migration `create_daily_objects`. A live catalog query verified RLS enabled, anonymous SELECT allowed, and anonymous INSERT/UPDATE/DELETE privileges denied. Direct Data API verification returned GET 200 and POST/PATCH/DELETE 401. The live database has unique constraints on both display_date and met_object_id.
 
 Created the public GitHub repository at https://github.com/kennethistesting/one-from-the-met.
 
-## Pending external setup
+## Live deployment verified
 
-- Verify unique constraints and real anonymous Data API behavior.
-- Configure public build variables, privileged Action secrets, and GitHub Pages as documented in README.
-- Run daily selection twice against the real database, then deploy and test the public Pages URL.
+- Public site: https://kennethistesting.github.io/one-from-the-met/
+- Deployment run 34308379952 completed successfully, including tests and production build.
+- Public build variables and both daily-job secrets are configured in GitHub. The service-role key was entered directly by the owner and is not stored locally or in repository files.
+- Daily run 34308841634 inserted Met object 310542, **Whistling vessel**, for September 8, 2026 (New York date), with public-domain status and exactly three observations.
+- Daily run 34308910338 succeeded and logged: “An entry already exists for 2026-09-08; leaving it unchanged.” The database retained exactly one row with the same ID, object ID, date, and creation timestamp.
+- The live homepage displays the selected object. Its original Met image loaded at 3078 × 4000 pixels. The archive and permanent day URL work, including direct refreshes on GitHub Pages.
+- The workflow schedule is 10:00 UTC daily (06:00 EDT / 05:00 EST); daily inserts do not rebuild the frontend.
 
-The local implementation is ready for this setup. The live-site acceptance criteria are not yet complete.
+No external setup remains. Multi-entry production navigation will become available naturally after another daily selection; it has already passed the fixture-based browser checks.
