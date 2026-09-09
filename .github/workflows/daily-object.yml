@@ -2,7 +2,8 @@ name: Select Daily Met Object
 
 on:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '17 6 * * *'
+      timezone: 'America/New_York'
   workflow_dispatch:
 
 permissions:
