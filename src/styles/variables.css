@@ -1,0 +1,15 @@
+:root {
+  --paper: #f5f2ea;
+  --ink: #1d1d1b;
+  --muted: #68645c;
+  --rule: #d8d3c8;
+  --well: #eae6dc;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', Arial, sans-serif;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
