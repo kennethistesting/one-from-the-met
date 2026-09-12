@@ -135,6 +135,10 @@ Before calling the live deployment complete:
 
 ## Project map
 
+The homepage hero is authored in **`index.html`**, using Inter and Tailwind's browser CDN as requested. Its generated museum MP4 and poster live in `public/media/`; provenance and the image prompt are recorded in `public/media/README.md`. The hero uses the existing read-only Supabase queries to place today's real Met image inside the case. Full object pages, archive, and About remain React hash routes. The hero's CTA opens today's permanent entry. Services and Locations link to official Met visitor resources, Places opens the archive, and Support links to The Met's support page.
+
+The background is a camera move over a generated still, not text-to-video footage. It plays twice (one repeat), then stops on the final frame; visitors can pause/replay it. Reduced-motion preferences disable automatic playback and entrance animations. The CDN is used at the user's request; Tailwind documents this browser mode as intended for development, so a compiled Tailwind stylesheet would be the next optimization if the single-file/CDN requirement changes.
+
 ```text
 .github/workflows/       Daily selection and Pages deployment
 scripts/                 Met client, date/content helpers, privileged selector

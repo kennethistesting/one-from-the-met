@@ -1,17 +1,200 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#F5F2EA" />
-    <meta name="description" content="One object. One day. A few minutes of learning. A daily encounter with The Metropolitan Museum of Art collection." />
-    <title>One From The Met</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#171613" />
+  <meta name="description" content="Step inside a daily encounter with art. Discover one object from The Metropolitan Museum of Art every day." />
+  <title>One Artifact From Met a Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    /* All new hero markup, layout, motion and behavior live in this HTML.
+       Existing archive and object pages remain in the React app. */
+    * { scrollbar-width: none; }
+    *::-webkit-scrollbar { display: none; }
+    [hidden] { display: none !important; }
+    #landing { position: relative; isolation: isolate; height: 100vh; height: 100svh; overflow: hidden; background: #171613; color: white; font-family: Inter, Arial, sans-serif; }
+    #landing a { color: inherit; text-decoration: none; }
+    #landing button { font-family: inherit; cursor: pointer; }
+    #landing a:focus-visible, #landing button:focus-visible { outline: 2px solid white; outline-offset: 6px; }
+    .museum-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -3; }
+    .cinema-shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.1), rgba(0,0,0,.4)); z-index: -1; pointer-events: none; }
+    .hero-nav { position: absolute; z-index: 10; inset: 0 0 auto; padding: 30px 4%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .hero-brand { font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -.045em; white-space: nowrap; }
+    .hero-menu { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+    .hero-menu a { font-size: 14px; font-weight: 400; opacity: .9; transition: opacity .2s; }
+    .hero-menu a:hover { opacity: 1; }
+    .look-button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.75); background: transparent; padding: 12px 20px; font-size: 14px; font-weight: 400; transition: background .25s, color .25s; }
+    #landing .look-button:hover { background: white; color: black; }
+    .hero-menu .mobile-look { display: none; }
+    .hero-copy { position: absolute; z-index: 1; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
+    .hero-copy-inner { width: 100%; max-width: 960px; height: 72%; position: relative; margin: auto; }
+    .hero-heading { position: absolute; top: -22px; width: 100%; }
+    .hero-heading time { display: block; margin: 0 0 15px; color: rgba(255,255,255,.7); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
+    #landing h1 { color: white; font-family: Inter, Arial, sans-serif; font-size: 56px; font-weight: 500; line-height: 1.1; letter-spacing: -.055em; margin: 0; }
+    .case-art { position: absolute; z-index: -2; left: 50%; top: 50%; width: 300px; height: 280px; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+    .case-art img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 12px 20px rgba(0,0,0,.45)); opacity: 0; transition: opacity 1.2s; }
+    .case-art img.loaded { opacity: 1; }
+    .artifact-caption { position: absolute; bottom: 0; width: 100%; padding: 0 24px; pointer-events: auto; }
+    .artifact-caption h2 { font: 400 20px/1.35 Inter, Arial, sans-serif; letter-spacing: -.025em; margin: 0 auto 8px; max-width: 620px; text-wrap: balance; }
+    .artifact-caption p { color: rgba(255,255,255,.65); font-size: 12px; line-height: 1.6; margin: 0; }
+    .artifact-caption a { display: inline-block; margin-top: 20px; border-bottom: 1px solid rgba(255,255,255,.5); padding-bottom: 5px; font-size: 13px; }
+    .hero-foot { position: absolute; bottom: 28px; left: 4%; right: 4%; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 11px; letter-spacing: .05em; color: rgba(255,255,255,.65); z-index: 2; }
+    .hero-foot a { font-size: 12px; }
+    .motion-button { display: inline-flex; align-items: center; gap: 9px; background: none; color: white; border: 0; padding: 10px 0; font-size: 12px; }
+    .motion-button svg { width: 12px; height: 12px; }
+    .hamburger { display: none; background: none; color: white; border: 0; padding: 10px; }
+    .hamburger svg { width: 23px; height: 23px; }
+    .fade-up { animation: fade-up .95s cubic-bezier(.2,.7,.2,1) both; }
+    .delay-one { animation-delay: .25s; } .delay-two { animation-delay: .42s; } .delay-three { animation-delay: .65s; }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1100px) { .hero-menu { gap: 18px; } .hero-nav { gap: 20px; } }
+    @media (max-width: 980px) {
+      .hero-nav { padding: 23px 24px; }
+      .hero-menu { display: none; position: absolute; top: 86px; left: 16px; right: 16px; padding: 26px; background: rgba(19,19,17,.97); border: 1px solid rgba(255,255,255,.15); align-items: stretch; flex-direction: column; gap: 22px; }
+      .hero-menu.open { display: flex; }
+      .hero-menu .mobile-look { display: inline-flex; }
+      .hero-nav > .look-button { margin-left: auto; }
+      .hamburger { display: inline-flex; }
+    }
+    @media (max-width: 639px) {
+      #landing h1 { font-size: 38px; }
+      .hero-brand { white-space: normal; max-width: 240px; font-size: 20px; }
+      .hero-nav { gap: 10px; }
+      .hero-nav > .look-button { display: none; }
+      .hamburger { margin-left: auto; }
+      .hero-copy-inner { height: 70%; }
+      .hero-heading time { margin-bottom: 12px; font-size: 10px; }
+      .artifact-caption h2 { font-size: 18px; max-width: 330px; }
+      .artifact-caption a { margin-top: 14px; }
+      .hero-foot { left: 24px; right: 24px; bottom: 20px; }
+      .hero-foot > span { max-width: 120px; font-size: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .fade-up { animation: none; } .case-art img { transition: none; } }
+  </style>
+</head>
+<body>
+  <section id="landing" aria-labelledby="hero-title">
+    <video id="museum-video" class="museum-video" autoplay muted playsinline preload="auto" poster="/media/museum-poster.jpg" aria-hidden="true">
+      <source src="/media/museum-pan.mp4" type="video/mp4" />
+    </video>
+    <div id="case-art" class="case-art"><img id="daily-art" alt="" hidden /></div>
+    <div class="cinema-shade"></div>
+    <nav class="hero-nav fade-up" aria-label="Main navigation">
+      <a class="hero-brand text-xl font-semibold text-white" href="#/">One Artifact From Met a Day</a>
+      <div id="hero-menu" class="hero-menu">
+        <a href="#/about" class="text-[14px] font-normal text-white/90">About</a>
+        <a href="https://www.metmuseum.org/visit/accessibility" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Services</a>
+        <a href="https://www.metmuseum.org/visit" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Locations</a>
+        <a href="#/archive" class="text-[14px] font-normal text-white/90">Places</a>
+        <a href="https://www.metmuseum.org/support" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Support</a>
+        <a data-look-link href="#/archive" class="look-button mobile-look">Let's Take a Look</a>
+      </div>
+      <a data-look-link href="#/archive" class="look-button border border-white text-[14px] font-normal hover:bg-white hover:text-black">Let's Take a Look</a>
+      <button id="menu-toggle" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="hero-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h18M3 16h18" /></svg></button>
+    </nav>
+    <main class="hero-copy">
+      <div class="hero-copy-inner max-w-5xl text-center">
+        <div class="hero-heading"><time id="hero-date" class="fade-up delay-one"></time><h1 id="hero-title" class="fade-up delay-two text-[38px] sm:text-[56px] font-medium leading-[1.1] text-white">Today's Object</h1></div>
+        <div class="artifact-caption fade-up delay-three" aria-live="polite">
+          <h2 id="object-title">A moment of discovery.</h2>
+          <p id="object-meta">Preparing your daily encounter with art.</p>
+          <a data-look-link id="object-link" href="#/archive">Explore the archive <span aria-hidden="true">↗</span></a>
+          <button id="retry-object" class="motion-button" hidden>Try again</button>
+        </div>
+      </div>
+    </main>
+    <footer class="hero-foot fade-up delay-three">
+      <span>One object. One day. A new perspective.</span>
+      <button id="motion-toggle" class="motion-button" aria-label="Pause background video"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1h2v10H2zm6 0h2v10H8z" /></svg><span>Pause film</span></button>
+      <a href="#/archive">The archive <span aria-hidden="true">↗</span></a>
+    </footer>
+  </section>
+  <div id="root" hidden></div>
+  <script type="module">
+    import { getTodayObject } from './src/lib/queries.ts';
+    import { getNewYorkDate, formatDate } from './src/lib/date.ts';
+    const landing = document.getElementById('landing'), root = document.getElementById('root');
+    const video = document.getElementById('museum-video'), art = document.getElementById('daily-art'), caseArt = document.getElementById('case-art');
+    const menu = document.getElementById('hero-menu'), menuToggle = document.getElementById('menu-toggle'), motionToggle = document.getElementById('motion-toggle');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let plays = 0, userPaused = false, loadedDate = '', requestVersion = 0, artworkTitle = '';
+    function closeMenu() { menu.classList.remove('open'); menuToggle.setAttribute('aria-expanded', 'false'); menuToggle.setAttribute('aria-label', 'Open menu'); }
+    menuToggle.addEventListener('click', () => { const open = menu.classList.toggle('open'); menuToggle.setAttribute('aria-expanded', String(open)); menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); });
+    menu.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('open')) { closeMenu(); menuToggle.focus(); } });
+    // Match the encoded zoom exactly. Both layers share object-fit: cover geometry.
+    function placeArtifact() {
+      const w = landing.clientWidth, h = landing.clientHeight, cover = Math.max(w / 1600, h / 900);
+      const progress = Math.min(video.currentTime / (239 / 30), 1), zoom = 1 + .1 * (1 - Math.cos(Math.PI * progress)) / 2;
+      caseArt.style.width = `${1600 * cover * .195 * zoom}px`;
+      caseArt.style.height = `${900 * cover * .30 * zoom}px`;
+      caseArt.style.left = `${w / 2}px`;
+      caseArt.style.top = `${h / 2 - 900 * cover * .01 * zoom}px`;
+      caseArt.style.transform = 'translate(-50%, -50%)';
+    }
+    const frames = () => { placeArtifact(); if ('requestVideoFrameCallback' in video) video.requestVideoFrameCallback(frames); };
+    if ('requestVideoFrameCallback' in video) video.requestVideoFrameCallback(frames);
+    else video.addEventListener('timeupdate', placeArtifact);
+    new ResizeObserver(placeArtifact).observe(landing);
+    video.addEventListener('seeked', placeArtifact);
+    video.muted = true;
+    function motionLabel() { const paused = video.paused || video.ended; motionToggle.querySelector('span').textContent = paused ? (plays >= 2 ? 'Replay film' : 'Play film') : 'Pause film'; motionToggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video'); }
+    video.addEventListener('play', motionLabel); video.addEventListener('pause', motionLabel);
+    // Initial play plus one repeat; no loop attribute because that loops indefinitely.
+    video.addEventListener('ended', () => { plays++; if (plays < 2 && !userPaused && !reducedMotion.matches && !landing.hidden) { video.currentTime = 0; video.play().catch(motionLabel); } else motionLabel(); });
+    motionToggle.addEventListener('click', () => { if (video.paused) { if (plays >= 2 || video.ended) { plays = 0; video.currentTime = 0; } userPaused = false; video.play().catch(motionLabel); } else { userPaused = true; video.pause(); } });
+    video.addEventListener('error', () => { motionToggle.hidden = true; });
+    reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) video.pause(); });
+    if (reducedMotion.matches) { video.autoplay = false; video.pause(); }
+    async function loadObject() {
+      const version = ++requestVersion;
+      loadedDate = getNewYorkDate();
+      const date = document.getElementById('hero-date'); date.textContent = formatDate(loadedDate); date.dateTime = loadedDate;
+      document.getElementById('retry-object').hidden = true;
+      art.hidden = true; art.classList.remove('loaded');
+      try {
+        const object = await getTodayObject();
+        if (version !== requestVersion) return;
+        document.querySelectorAll('[data-look-link]').forEach(link => link.href = object ? `#/day/${object.display_date}` : '#/archive');
+        artworkTitle = object?.title || '';
+        document.getElementById('object-title').textContent = artworkTitle || 'Today’s object is being prepared.';
+        document.getElementById('object-meta').textContent = object ? [object.artist_display_name || object.culture || object.period || object.dynasty, object.object_date].filter(Boolean).join(' · ') : 'Explore the archive while you wait.';
+        document.getElementById('object-link').textContent = object ? 'Discover this object ↗' : 'Explore the archive ↗';
+        if (object) {
+          art.onload = () => { art.classList.add('loaded'); placeArtifact(); };
+          art.onerror = () => { art.hidden = true; document.getElementById('object-meta').textContent = 'Image unavailable. Explore the object’s story below.'; };
+          art.alt = object.title; art.hidden = false; art.src = object.primary_image;
+        }
+        if (!landing.hidden) document.title = object ? `${object.title} · One Artifact From Met a Day` : 'One Artifact From Met a Day';
+      } catch {
+        if (version !== requestVersion) return;
+        loadedDate = '';
+        document.getElementById('object-title').textContent = 'A little pause in the gallery.';
+        document.getElementById('object-meta').textContent = 'We couldn’t load today’s object. Try again, or visit the archive.';
+        document.getElementById('retry-object').hidden = false;
+      }
+    }
+    document.getElementById('retry-object').addEventListener('click', loadObject);
+    function route() {
+      const home = !location.hash || location.hash === '#' || location.hash === '#/';
+      landing.hidden = !home; root.hidden = home; closeMenu();
+      if (!home) video.pause();
+      else {
+        document.title = artworkTitle ? `${artworkTitle} · One Artifact From Met a Day` : 'One Artifact From Met a Day';
+        if (loadedDate !== getNewYorkDate()) void loadObject();
+        if (!reducedMotion.matches && !userPaused && plays < 2) video.play().catch(motionLabel);
+        placeArtifact();
+      }
+    }
+    window.addEventListener('hashchange', route);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); else route(); });
+    setInterval(() => { if (!landing.hidden && !document.hidden && loadedDate && loadedDate !== getNewYorkDate()) void loadObject(); }, 30000);
+    route();
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
