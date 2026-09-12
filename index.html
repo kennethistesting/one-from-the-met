@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#171613" />
   <meta name="description" content="Step inside a daily encounter with art. Discover one object from The Metropolitan Museum of Art every day." />
-  <title>One Artifact From Met a Day</title>
+  <title>One Met Artifact a Day</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -29,7 +29,6 @@
     .hero-menu a:hover { opacity: 1; }
     .look-button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.75); background: transparent; padding: 12px 20px; font-size: 14px; font-weight: 400; transition: background .25s, color .25s; }
     #landing .look-button:hover { background: white; color: black; }
-    .hero-menu .mobile-look { display: none; }
     .hero-copy { position: absolute; z-index: 1; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
     .hero-copy-inner { width: 100%; max-width: 960px; height: 72%; position: relative; margin: auto; }
     .hero-heading { position: absolute; top: -22px; width: 100%; }
@@ -41,7 +40,7 @@
     .artifact-caption { position: absolute; bottom: 0; width: 100%; padding: 0 24px; pointer-events: auto; }
     .artifact-caption h2 { font: 400 20px/1.35 Inter, Arial, sans-serif; letter-spacing: -.025em; margin: 0 auto 8px; max-width: 620px; text-wrap: balance; }
     .artifact-caption p { color: rgba(255,255,255,.65); font-size: 12px; line-height: 1.6; margin: 0; }
-    .artifact-caption a { display: inline-block; margin-top: 20px; border-bottom: 1px solid rgba(255,255,255,.5); padding-bottom: 5px; font-size: 13px; }
+    .artifact-caption .look-button { margin-top: 20px; }
     .hero-foot { position: absolute; bottom: 28px; left: 4%; right: 4%; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 11px; letter-spacing: .05em; color: rgba(255,255,255,.65); z-index: 2; }
     .hero-foot a { font-size: 12px; }
     .motion-button { display: inline-flex; align-items: center; gap: 9px; background: none; color: white; border: 0; padding: 10px 0; font-size: 12px; }
@@ -56,15 +55,12 @@
       .hero-nav { padding: 23px 24px; }
       .hero-menu { display: none; position: absolute; top: 86px; left: 16px; right: 16px; padding: 26px; background: rgba(19,19,17,.97); border: 1px solid rgba(255,255,255,.15); align-items: stretch; flex-direction: column; gap: 22px; }
       .hero-menu.open { display: flex; }
-      .hero-menu .mobile-look { display: inline-flex; }
-      .hero-nav > .look-button { margin-left: auto; }
       .hamburger { display: inline-flex; }
     }
     @media (max-width: 639px) {
       #landing h1 { font-size: 38px; }
       .hero-brand { white-space: normal; max-width: 240px; font-size: 20px; }
       .hero-nav { gap: 10px; }
-      .hero-nav > .look-button { display: none; }
       .hamburger { margin-left: auto; }
       .hero-copy-inner { height: 70%; }
       .hero-heading time { margin-bottom: 12px; font-size: 10px; }
@@ -84,16 +80,10 @@
     <div id="case-art" class="case-art"><img id="daily-art" alt="" hidden /></div>
     <div class="cinema-shade"></div>
     <nav class="hero-nav fade-up" aria-label="Main navigation">
-      <a class="hero-brand text-xl font-semibold text-white" href="#/">One Artifact From Met a Day</a>
+      <a class="hero-brand text-xl font-semibold text-white" href="#/">One Met Artifact a Day</a>
       <div id="hero-menu" class="hero-menu">
         <a href="#/about" class="text-[14px] font-normal text-white/90">About</a>
-        <a href="https://www.metmuseum.org/visit/accessibility" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Services</a>
-        <a href="https://www.metmuseum.org/visit" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Locations</a>
-        <a href="#/archive" class="text-[14px] font-normal text-white/90">Places</a>
-        <a href="https://www.metmuseum.org/support" target="_blank" rel="noopener noreferrer" class="text-[14px] font-normal text-white/90">Support</a>
-        <a data-look-link href="#/archive" class="look-button mobile-look">Let's Take a Look</a>
       </div>
-      <a data-look-link href="#/archive" class="look-button border border-white text-[14px] font-normal hover:bg-white hover:text-black">Let's Take a Look</a>
       <button id="menu-toggle" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="hero-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h18M3 16h18" /></svg></button>
     </nav>
     <main class="hero-copy">
@@ -102,7 +92,7 @@
         <div class="artifact-caption fade-up delay-three" aria-live="polite">
           <h2 id="object-title">A moment of discovery.</h2>
           <p id="object-meta">Preparing your daily encounter with art.</p>
-          <a data-look-link id="object-link" href="#/archive">Explore the archive <span aria-hidden="true">↗</span></a>
+          <a data-look-link id="object-link" class="look-button" href="#/archive">Explore the archive <span aria-hidden="true">↗</span></a>
           <button id="retry-object" class="motion-button" hidden>Try again</button>
         </div>
       </div>
@@ -163,13 +153,13 @@
         artworkTitle = object?.title || '';
         document.getElementById('object-title').textContent = artworkTitle || 'Today’s object is being prepared.';
         document.getElementById('object-meta').textContent = object ? [object.artist_display_name || object.culture || object.period || object.dynasty, object.object_date].filter(Boolean).join(' · ') : 'Explore the archive while you wait.';
-        document.getElementById('object-link').textContent = object ? 'Discover this object ↗' : 'Explore the archive ↗';
+        document.getElementById('object-link').textContent = object ? "Let's Take a Look" : 'Explore the archive ↗';
         if (object) {
           art.onload = () => { art.classList.add('loaded'); placeArtifact(); };
           art.onerror = () => { art.hidden = true; document.getElementById('object-meta').textContent = 'Image unavailable. Explore the object’s story below.'; };
           art.alt = object.title; art.hidden = false; art.src = object.primary_image;
         }
-        if (!landing.hidden) document.title = object ? `${object.title} · One Artifact From Met a Day` : 'One Artifact From Met a Day';
+        if (!landing.hidden) document.title = object ? `${object.title} · One Met Artifact a Day` : 'One Met Artifact a Day';
       } catch {
         if (version !== requestVersion) return;
         loadedDate = '';
@@ -184,7 +174,7 @@
       landing.hidden = !home; root.hidden = home; closeMenu();
       if (!home) video.pause();
       else {
-        document.title = artworkTitle ? `${artworkTitle} · One Artifact From Met a Day` : 'One Artifact From Met a Day';
+        document.title = artworkTitle ? `${artworkTitle} · One Met Artifact a Day` : 'One Met Artifact a Day';
         if (loadedDate !== getNewYorkDate()) void loadObject();
         if (!reducedMotion.matches && !userPaused && plays < 2) video.play().catch(motionLabel);
         placeArtifact();
