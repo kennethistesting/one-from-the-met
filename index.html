@@ -34,12 +34,14 @@
     .hero-heading { position: absolute; top: -22px; width: 100%; }
     .hero-heading time { display: block; margin: 0 0 15px; color: rgba(255,255,255,.7); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
     #landing h1 { color: white; font-family: Inter, Arial, sans-serif; font-size: 56px; font-weight: 500; line-height: 1.1; letter-spacing: -.055em; margin: 0; }
+    .museum-subtitle { margin: 14px 24px 0; font-size: 11px; line-height: 1.6; letter-spacing: .16em; color: rgba(255,255,255,.8); text-transform: uppercase; }
     .case-art { position: absolute; z-index: -2; left: 50%; top: 50%; width: 300px; height: 280px; display: flex; align-items: center; justify-content: center; pointer-events: none; }
     .case-art img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 12px 20px rgba(0,0,0,.45)); opacity: 0; transition: opacity 1.2s; }
     .case-art img.loaded { opacity: 1; }
     .artifact-caption { position: absolute; bottom: 0; width: 100%; padding: 0 24px; pointer-events: auto; }
+    .museum-plaque { width: fit-content; max-width: 420px; min-width: 300px; margin: 0 auto; padding: 20px 28px; background: #f0ecdf; color: #302e28; border: 1px solid #d9d2c1; box-shadow: 0 3px 12px rgba(0,0,0,.22); text-align: left; }
     .artifact-caption h2 { font: 400 20px/1.35 Inter, Arial, sans-serif; letter-spacing: -.025em; margin: 0 auto 8px; max-width: 620px; text-wrap: balance; }
-    .artifact-caption p { color: rgba(255,255,255,.65); font-size: 12px; line-height: 1.6; margin: 0; }
+    .artifact-caption p { color: #686358; font-size: 12px; line-height: 1.6; margin: 0; white-space: pre-line; }
     .artifact-caption .look-button { margin-top: 20px; }
     .hero-foot { position: absolute; bottom: 28px; left: 4%; right: 4%; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 11px; letter-spacing: .05em; color: rgba(255,255,255,.65); z-index: 2; }
     .hero-foot a { font-size: 12px; }
@@ -64,10 +66,19 @@
       .hamburger { margin-left: auto; }
       .hero-copy-inner { height: 70%; }
       .hero-heading time { margin-bottom: 12px; font-size: 10px; }
+      .museum-subtitle { font-size: 9px; letter-spacing: .12em; max-width: 280px; margin: 12px auto 0; }
+      .museum-plaque { min-width: 0; width: 100%; max-width: 340px; padding: 16px 22px; }
       .artifact-caption h2 { font-size: 18px; max-width: 330px; }
       .artifact-caption a { margin-top: 14px; }
       .hero-foot { left: 24px; right: 24px; bottom: 20px; }
       .hero-foot > span { max-width: 120px; font-size: 10px; }
+    }
+    @media (max-height: 700px) {
+      .artifact-caption { bottom: -12px; }
+      .museum-plaque { padding: 12px 24px; }
+      .artifact-caption h2 { font-size: 17px; margin-bottom: 5px; }
+      .artifact-caption p { font-size: 11px; }
+      .artifact-caption .look-button { margin-top: 12px; padding: 8px 16px; }
     }
     @media (prefers-reduced-motion: reduce) { .fade-up { animation: none; } .case-art img { transition: none; } }
   </style>
@@ -88,10 +99,12 @@
     </nav>
     <main class="hero-copy">
       <div class="hero-copy-inner max-w-5xl text-center">
-        <div class="hero-heading"><time id="hero-date" class="fade-up delay-one"></time><h1 id="hero-title" class="fade-up delay-two text-[38px] sm:text-[56px] font-medium leading-[1.1] text-white">Today's Object</h1></div>
+        <div class="hero-heading"><time id="hero-date" class="fade-up delay-one"></time><h1 id="hero-title" class="fade-up delay-two text-[38px] sm:text-[56px] font-medium leading-[1.1] text-white">Today's Object</h1><p class="museum-subtitle fade-up delay-three">From The Metropolitan Museum of Art</p></div>
         <div class="artifact-caption fade-up delay-three" aria-live="polite">
+          <div class="museum-plaque">
           <h2 id="object-title">A moment of discovery.</h2>
           <p id="object-meta">Preparing your daily encounter with art.</p>
+          </div>
           <a data-look-link id="object-link" class="look-button" href="#/archive">Explore the archive <span aria-hidden="true">↗</span></a>
           <button id="retry-object" class="motion-button" hidden>Try again</button>
         </div>
@@ -152,7 +165,7 @@
         document.querySelectorAll('[data-look-link]').forEach(link => link.href = object ? `#/day/${object.display_date}` : '#/archive');
         artworkTitle = object?.title || '';
         document.getElementById('object-title').textContent = artworkTitle || 'Today’s object is being prepared.';
-        document.getElementById('object-meta').textContent = object ? [object.artist_display_name || object.culture || object.period || object.dynasty, object.object_date].filter(Boolean).join(' · ') : 'Explore the archive while you wait.';
+        document.getElementById('object-meta').textContent = object ? [object.artist_display_name || object.culture || object.period || object.dynasty, object.object_date].filter(Boolean).join('\n') : 'Explore the archive while you wait.';
         document.getElementById('object-link').textContent = object ? "Let's Take a Look" : 'Explore the archive ↗';
         if (object) {
           art.onload = () => { art.classList.add('loaded'); placeArtifact(); };
